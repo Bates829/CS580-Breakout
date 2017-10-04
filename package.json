@@ -1,0 +1,24 @@
+{
+  "name": "cs580-breakout",
+  "version": "1.0.0",
+  "description": "A simple breakout game",
+  "main": "game.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bates829/CS580-Breakout.git"
+  },
+  "author": "Ryan Bates",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bates829/CS580-Breakout/issues"
+  },
+  "homepage": "https://github.com/Bates829/CS580-Breakout#readme",
+  "devDependencies": {
+    "react-scripts": "^1.0.14"
+  }
+}
