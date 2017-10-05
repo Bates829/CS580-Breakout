@@ -1,74 +1,139 @@
 // game.js
-import Paddle from './paddle';
-import Bricks from './bricks';
 
 export default class Game {
   constructor(){
-    this.paddle = new Paddle();
-    this.bricks = new Bricks();
-    this.input = {
-      direction: 'idle'
-    }
-    //Create the canvas
-    this.canvas = document.createElement('canvas');
-    this.canvas.width = 480;
-    this.canvas.height = 320;
+    // Get the canvas
+    this.canvas = document.getElementById("canvas")
     this.ctx = this.canvas.getContext('2d');
 
+    //Set paddle values
+    this.paddleHeight = 10;
+    this.paddleWidth = 75;
+    this.paddleX = (this.canvas.width - this.paddleWidth)/2;
+    this.left = false;
+    this.right = false;
+
+    //Set ball values
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height - 30;
     this.x2 = 2;
     this.y2 = -2;
     this.ballRadius = 10;
-    this.paddleX = (this.canvas.width - this.paddle.paddleWidth)/2;
 
+    //Set brick values
+    this.rowCount = 10;
+    this.columnCount = 10;
+    this.width = 47;
+    this.height = 10;
+    this.padding = 1;
+    this.offsetTop = 25;
+    this.offsetLeft = 0.5;
+
+    this.bricks = [];
+    for(var i = 0; i < this.columnCount; i++){
+      this.bricks[i] = [];
+      for(var j = 0; j < this.rowCount; j++){
+        this.bricks[i][j] = {x: 0, y: 0, status: 1};
+      }
+    }
+    // Generates a random color for bricks
+    this.cr = 'rgb('+
+        Math.floor(Math.random()*256)+ ',' +
+        Math.floor(Math.random()*256)+ ',' +
+        Math.floor(Math.random()*256)+ ')';
+
+    // Bind the class methods
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.loop = this.loop.bind(this);
-    this.render = this.render.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
     this.detectCollision = this.detectCollision.bind(this);
     this.update = this.update.bind(this);
     this.renderPaddle = this.renderPaddle.bind(this);
+    this.renderBall = this.renderBall.bind(this);
+    this.renderBricks = this.renderBricks.bind(this);
 
-    setInterval(this.loop, 10);
-  }
+    document.addEventListener("keydown", this.handleKeyDown, false);
+    document.addEventListener("keyup", this.handleKeyUp, false);
 
-  gameOver(){
-
+    // Updates the game at a set interval
+    setInterval(this.update, 20);
   }
 
   handleKeyDown(event){
     event.preventDefault();
-    switch(event.key){
-      case 'ArrowLeft':
-        this.input.direction = 'left';
-        break;
-      case 'ArrowRight':
-        this.input.direction = 'right';
-        break;
-      default:
-        this.input.direction = 'idle';
+    if(event.keyCode === 39 || event.keyCode === 68){
+      this.right = true;
+    }
+    else if(event.keyCode === 37 || event.keyCode === 65){
+      this.left = true;
+    }
+  }
+
+  handleKeyUp(event){
+    event.preventDefault();
+    if(event.keyCode === 39 || event.keyCode === 68){
+      this.right = false;
+    }
+    else if(event.keyCode === 37 || event.keyCode === 65){
+      this.left = false;
     }
   }
 
   //Collision detection
   detectCollision(){
-    for(var i = 0; i < this.bricks.columnCount; i++){
-      for(var j = 0; j < this.bricks.rowCount; j++){
-          var b = this.bricks.bricks[i][j];
+    for(var i = 0; i < this.columnCount; i++){
+      for(var j = 0; j < this.rowCount; j++){
+          var b = this.bricks[i][j];
           if(b.status === 1){
-            if(this.x > b.x && this.x < b.x + this.bricks.width
-            && this.y > b.y && this.y < b.y + this.bricks.height){
+            if(this.x > b.x && this.x < b.x + this.width
+            && this.y > b.y && this.y < b.y + this.height){
               this.y2 = -this.y2;
               b.status = 0;
+              //Check score here and add sound
             }
           }
       }
     }
   }
 
-  //Update game
+  // Renders the ball to the canvas
+  renderBall(){
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.ballRadius, 0, Math.PI * 2);
+    this.ctx.fillStyle = 'purple';
+    this.ctx.fill();
+    this.ctx.closePath();
+  }
+
+  // Renders the paddle to the canvas
+  renderPaddle(){
+    this.ctx.beginPath();
+    this.ctx.rect(this.paddleX, this.canvas.height-this.paddleHeight, this.paddleWidth, this.paddleHeight);
+    this.ctx.fillStyle = "black";
+    this.ctx.fill();
+    this.ctx.closePath();
+  }
+
+  // Renders the bricks to the canvas with a random color
+  renderBricks(){
+    for(var i = 0; i < this.columnCount; i++){
+      for(var j = 0; j < this.rowCount; j++){
+        if(this.bricks[i][j].status === 1){
+          var brickX = (i * (this.width+this.padding))+this.offsetLeft;
+          var brickY = (j * (this.height+this.padding))+this.offsetTop;
+          this.bricks[i][j].x = brickX;
+          this.bricks[i][j].y = brickY;
+          this.ctx.beginPath();
+          this.ctx.rect(brickX, brickY, this.width, this.height);
+          this.ctx.fillStyle = this.cr;
+          this.ctx.fill();
+          this.ctx.closePath();
+        }
+      }
+    }
+  }
+
+  //Updates the game
   update(){
-    //Update ball
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.renderBall();
     this.renderBricks();
@@ -81,7 +146,7 @@ export default class Game {
       this.y2 = -this.y2;
     }
     else if(this.y + this.y2 > this.canvas.height-this.ballRadius){
-      if(this.x > this.paddleX && this.x < this.paddleX + this.paddle.paddleWidth){
+      if(this.x > this.paddleX && this.x < this.paddleX + this.paddleWidth){
           this.y2 = -this.y2;
       }
       else{
@@ -89,59 +154,13 @@ export default class Game {
         //document.location.reload();
       }
     }
+    if(this.left && this.paddleX > 0){
+      this.paddleX -= 7;
+    }
+    else if(this.right && this.paddleX < this.canvas.width-this.paddleWidth){
+      this.paddleX += 7;
+    }
     this.x += this.x2;
     this.y += this.y2;
-
-    //Update paddle
-    if(this.paddle.x > 0 && this.paddle.x < this.canvas.width-this.paddle.paddleWidth){
-      this.paddle.update(this.input);
-    }
-  }
-
-  // Draws canvas
-  render(){
-    this.ctx.fillStyle = "#ccc";
-    this.ctx.fillRect(0, 0, 480, 320);
-  }
-
-  renderBall(){
-    this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.ballRadius, 0, Math.PI * 2);
-    this.ctx.fillStyle = 'blue';
-    this.ctx.fillStroke = 'blue';
-    this.ctx.Stroke = '10';
-    this.ctx.fill();
-    this.ctx.closePath();
-  }
-
-  renderPaddle(){
-    this.ctx.beginPath();
-    this.ctx.rect(this.paddleX, this.canvas.height-this.paddle.paddleHeight, this.paddle.paddleWidth, this.paddle.paddleHeight);
-    this.ctx.fillStyle = "blue";
-    this.ctx.fill();
-    this.ctx.closePath();
-  }
-
-  renderBricks(){
-    for(var i = 0; i < this.bricks.columnCount; i++){
-      for(var j = 0; j < this.bricks.rowCount; j++){
-        if(this.bricks.bricks[i][j].status === 1){
-          var brickX = (i * (this.bricks.width+this.bricks.padding))+this.bricks.offsetLeft;
-          var brickY = (j * (this.bricks.height+this.bricks.padding))+this.bricks.offsetTop;
-          this.bricks.bricks[i][j].x = brickX;
-          this.bricks.bricks[i][j].y = brickY;
-          this.ctx.beginPath();
-          this.ctx.rect(brickX, brickY, this.bricks.width, this.bricks.height);
-          this.ctx.fillStyle = "blue";
-          this.ctx.fill();
-          this.ctx.closePath();
-        }
-      }
-    }
-  }
-
-  loop(){
-    this.render();
-    this.update();
   }
 }
