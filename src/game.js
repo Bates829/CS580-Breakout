@@ -6,18 +6,39 @@ export default class Game {
     this.canvas = document.getElementById("canvas")
     this.ctx = this.canvas.getContext('2d');
 
+    // Create message to display
+    var message = document.createElement('div');
+    message.id = 'message';
+    message.textContent = '';
+    document.body.appendChild(message);
+
+    // Create audio tag for bricks
+    var brickSound = document.createElement('audio');
+    brickSound.id = 'brickSound';
+    brickSound.type = 'audio/wav';
+    brickSound.src = '/src/Explosion.wav';
+    document.body.appendChild(brickSound);
+
+    //Create audio tag for ball bouncing
+    var bounce = document.createElement('audio');
+    bounce.id = 'bounce';
+    bounce.src = '/src/Bounce.wav';
+    bounce.type = 'audio/wav';
+    document.body.appendChild(bounce);
+
     //Set paddle values
     this.paddleHeight = 10;
     this.paddleWidth = 75;
     this.paddleX = (this.canvas.width - this.paddleWidth)/2;
     this.left = false;
     this.right = false;
+    this.paused = false;
 
     //Set ball values
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height - 30;
-    this.x2 = 2;
-    this.y2 = -2;
+    this.x2 = 3;
+    this.y2 = -3;
     this.ballRadius = 10;
 
     //Set brick values
@@ -36,6 +57,10 @@ export default class Game {
         this.bricks[i][j] = {x: 0, y: 0, status: 1};
       }
     }
+
+    this.score = 0;
+    this.lives = 3;
+
     // Generates a random color for bricks
     this.cr = 'rgb('+
         Math.floor(Math.random()*256)+ ',' +
@@ -50,14 +75,18 @@ export default class Game {
     this.renderPaddle = this.renderPaddle.bind(this);
     this.renderBall = this.renderBall.bind(this);
     this.renderBricks = this.renderBricks.bind(this);
+    this.displayScore = this.displayScore.bind(this);
+    this.displayLives = this.displayLives.bind(this);
+    this.gameOver = this.gameOver.bind(this);
 
     document.addEventListener("keydown", this.handleKeyDown, false);
     document.addEventListener("keyup", this.handleKeyUp, false);
 
-    // Updates the game at a set interval
+    //Updates the game at a set interval
     setInterval(this.update, 20);
   }
 
+  //Handles when a key is pressed
   handleKeyDown(event){
     event.preventDefault();
     if(event.keyCode === 39 || event.keyCode === 68){
@@ -68,6 +97,7 @@ export default class Game {
     }
   }
 
+  //Handles when a key is released
   handleKeyUp(event){
     event.preventDefault();
     if(event.keyCode === 39 || event.keyCode === 68){
@@ -76,6 +106,15 @@ export default class Game {
     else if(event.keyCode === 37 || event.keyCode === 65){
       this.left = false;
     }
+  }
+
+  //Creates a game over message
+  gameOver(){
+    var message = document.getElementById('message');
+    if(this.score === this.rowCount * this.columnCount){
+      message.textContent = "Congrats! You cleared the board!";
+    }
+    else message.textContent = "Game Over! Your score was: " + this.score;
   }
 
   //Collision detection
@@ -88,11 +127,34 @@ export default class Game {
             && this.y > b.y && this.y < b.y + this.height){
               this.y2 = -this.y2;
               b.status = 0;
-              //Check score here and add sound
+              var brickSound = document.getElementById('brickSound');
+              brickSound.play();
+              this.score++;
+              if(this.score === this.rowCount*this.columnCount){
+                //Stop ball and display game over message
+                this.gameOver()
+                this.x2 = 0;
+                this.y2 = 0;
+                setTimeout(document.location.reload.bind(document.location), 6000);
+              }
             }
           }
       }
     }
+  }
+
+  // Displays the score on the canvas
+  displayScore(){
+    this.ctx.font = '18px sans-serif';
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillText("Score: " + this.score, 8, 20);
+  }
+
+  //Displays the number of lives on the canvas
+  displayLives(){
+    this.ctx.font = '18px sans-serif';
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillText("Lives: " + this.lives, this.canvas.width-65, 20);
   }
 
   // Renders the ball to the canvas
@@ -138,27 +200,49 @@ export default class Game {
     this.renderBall();
     this.renderBricks();
     this.renderPaddle();
+    this.displayLives();
+    this.displayScore();
     this.detectCollision();
+    var bounce = document.getElementById('bounce');
+    //Check if ball has hit side walls
     if(this.x + this.x2 > this.canvas.width-this.ballRadius || this.x + this.x2 < this.ballRadius){
       this.x2 = -this.x2;
+      bounce.play();
     }
+    //Check if ball has hit ceiling
     if(this.y + this.y2 < this.ballRadius){
       this.y2 = -this.y2;
+      bounce.play();
     }
+    //Check if ball has hit paddle
     else if(this.y + this.y2 > this.canvas.height-this.ballRadius){
       if(this.x > this.paddleX && this.x < this.paddleX + this.paddleWidth){
           this.y2 = -this.y2;
+          bounce.play();
       }
       else{
-        //alert("Game Over");
-        //document.location.reload();
+        this.lives--;
+        if(!this.lives){
+          //Stop ball and display game over message
+          this.gameOver();
+          this.x2 = 0;
+          this.y2 = 0;
+          setTimeout(document.location.reload.bind(document.location), 6000);
+        }
+        else{
+          this.x = this.canvas.width / 2;
+          this.y = this.canvas.height - 30;
+          this.x2 = 3;
+          this.y2 = -3;
+          this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
+        }
       }
     }
     if(this.left && this.paddleX > 0){
-      this.paddleX -= 7;
+      this.paddleX -= 10;
     }
     else if(this.right && this.paddleX < this.canvas.width-this.paddleWidth){
-      this.paddleX += 7;
+      this.paddleX += 10;
     }
     this.x += this.x2;
     this.y += this.y2;
