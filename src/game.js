@@ -16,13 +16,13 @@ export default class Game {
     var brickSound = document.createElement('audio');
     brickSound.id = 'brickSound';
     brickSound.type = 'audio/wav';
-    brickSound.src = '/src/Explosion.wav';
+    brickSound.src = 'Explosion.wav';
     document.body.appendChild(brickSound);
 
     //Create audio tag for ball bouncing
     var bounce = document.createElement('audio');
     bounce.id = 'bounce';
-    bounce.src = '/src/Bounce.wav';
+    bounce.src = 'Bounce.wav';
     bounce.type = 'audio/wav';
     document.body.appendChild(bounce);
 
