@@ -1,5 +1,6 @@
 // game.js
 
+// Creates game class
 export default class Game {
   constructor(){
     // Get the canvas
