@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/Bates829/CS580-Breakout/issues"
   },
-  "homepage": "https://github.com/Bates829/CS580-Breakout#readme",
+  "homepage": "https://github.com/Bates829/CS580-Breakout/build",
   "devDependencies": {
     "react-scripts": "^1.0.14"
   }
