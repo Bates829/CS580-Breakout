@@ -1,0 +1,52 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'deploy' ]
+2 info using npm@3.10.10
+3 info using node@v6.11.3
+4 verbose run-script [ 'predeploy', 'deploy', 'postdeploy' ]
+5 info lifecycle cs580-breakout@1.0.0~predeploy: cs580-breakout@1.0.0
+6 verbose lifecycle cs580-breakout@1.0.0~predeploy: unsafe-perm in lifecycle true
+7 verbose lifecycle cs580-breakout@1.0.0~predeploy: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\Bates\Documents\StuffToSave\School\CS 580\CS580-Breakout\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\SMLNJ\bin\;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\Bates\AppData\Local\Microsoft\WindowsApps;C:\Users\Bates\AppData\Local\atom\bin;C:\Users\Bates\AppData\Roaming\npm
+8 verbose lifecycle cs580-breakout@1.0.0~predeploy: CWD: C:\Users\Bates\Documents\StuffToSave\School\CS 580\CS580-Breakout
+9 silly lifecycle cs580-breakout@1.0.0~predeploy: Args: [ '/d /s /c', 'npm run build' ]
+10 silly lifecycle cs580-breakout@1.0.0~predeploy: Returned: code: 0  signal: null
+11 info lifecycle cs580-breakout@1.0.0~deploy: cs580-breakout@1.0.0
+12 verbose lifecycle cs580-breakout@1.0.0~deploy: unsafe-perm in lifecycle true
+13 verbose lifecycle cs580-breakout@1.0.0~deploy: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\Bates\Documents\StuffToSave\School\CS 580\CS580-Breakout\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\SMLNJ\bin\;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\Bates\AppData\Local\Microsoft\WindowsApps;C:\Users\Bates\AppData\Local\atom\bin;C:\Users\Bates\AppData\Roaming\npm
+14 verbose lifecycle cs580-breakout@1.0.0~deploy: CWD: C:\Users\Bates\Documents\StuffToSave\School\CS 580\CS580-Breakout
+15 silly lifecycle cs580-breakout@1.0.0~deploy: Args: [ '/d /s /c', 'gh-pages -d build' ]
+16 silly lifecycle cs580-breakout@1.0.0~deploy: Returned: code: 1  signal: null
+17 info lifecycle cs580-breakout@1.0.0~deploy: Failed to exec deploy script
+18 verbose stack Error: cs580-breakout@1.0.0 deploy: `gh-pages -d build`
+18 verbose stack Exit status 1
+18 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:255:16)
+18 verbose stack     at emitTwo (events.js:106:13)
+18 verbose stack     at EventEmitter.emit (events.js:191:7)
+18 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:40:14)
+18 verbose stack     at emitTwo (events.js:106:13)
+18 verbose stack     at ChildProcess.emit (events.js:191:7)
+18 verbose stack     at maybeClose (internal/child_process.js:920:16)
+18 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:230:5)
+19 verbose pkgid cs580-breakout@1.0.0
+20 verbose cwd C:\Users\Bates\Documents\StuffToSave\School\CS 580\CS580-Breakout
+21 error Windows_NT 10.0.15063
+22 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "deploy"
+23 error node v6.11.3
+24 error npm  v3.10.10
+25 error code ELIFECYCLE
+26 error cs580-breakout@1.0.0 deploy: `gh-pages -d build`
+26 error Exit status 1
+27 error Failed at the cs580-breakout@1.0.0 deploy script 'gh-pages -d build'.
+27 error Make sure you have the latest version of node.js and npm installed.
+27 error If you do, this is most likely a problem with the cs580-breakout package,
+27 error not with npm itself.
+27 error Tell the author that this fails on your system:
+27 error     gh-pages -d build
+27 error You can get information on how to open an issue for this project with:
+27 error     npm bugs cs580-breakout
+27 error Or if that isn't available, you can get their info via:
+27 error     npm owner ls cs580-breakout
+27 error There is likely additional logging output above.
+28 verbose exit [ 1, true ]

@@ -4,6 +4,8 @@
   "description": "A simple breakout game",
   "main": "game.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,8 +19,11 @@
   "bugs": {
     "url": "https://github.com/Bates829/CS580-Breakout/issues"
   },
-  "homepage": "https://github.com/Bates829/CS580-Breakout/build",
+  "homepage": "https://Bates829.github.io/cs580-breakout",
   "devDependencies": {
     "react-scripts": "^1.0.14"
+  },
+  "dependencies": {
+    "gh-pages": "^1.0.0"
   }
 }
